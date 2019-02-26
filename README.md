@@ -36,21 +36,25 @@ f>data : 1992; name : agent 1 </def></abc>
 
 ## 2. 编写 quicksort
 
-## 3. 实现一个二叉树，使插入、查询、删除的时间复杂度为O(logn)
+## 3. 以排序二叉树为基础，实现 TreeMap，使增删改查节点的时间复杂度为O(logn)
 ```javascript
-class Tree {
+class TreeMap {
 // implement your code
 }
 
-let t = new Tree()
-t.add(2)
-t.hasValue(2)  // true
-t.add(4)
-t.add(4)
-t.add(3)
-t.print()      // 升序输出，[2, 3, 4]
-t.remove(2)    // [3, 4]
+let t = new TreeMap()
+t.put(1, "v1")
+t.put(2, "v2")
+t.put(3, "v3")
+t.get(2)  // "value2"
+t.print()      // 按key升序输出，[{1: "v1"}, {2: "v2"}, {3: "v3"}]
+t.delete(key1)
+t.print()      // 按key升序输出，[{2: "v2"}, {3: "v3"}]
 ```
+
+## 4. 单例模式实现示例
+
+
 
 [node官方文档](https://nodejs.org/en/)
 
