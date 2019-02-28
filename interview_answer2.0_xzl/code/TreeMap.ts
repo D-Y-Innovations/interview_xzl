@@ -1,20 +1,27 @@
 // 3. 以排序二叉树为基础，实现 TreeMap，使增删改查节点的时间复杂度为O(logn)
 
+
 let TreeMap = (function() {
+
     class Node {
 
-        key:any = {};
-        left:any;
-        right:any;
-        constructor(thekey:any,thekval:any) {
+        node_dict:{[key:number]:string;}={};
+        left_node : Node|null;
+        right_node : Node|null;
+        constructor(thekey:number,thekval:string) {
 
-            this.key[thekey] = thekval;
-            this.left = null;
-            this.right = null;
+            this.node_dict[thekey] = thekval;
+            this.left_node = null;
+            this.right_node = null;
         }
     }
+
+
+
+
     class BinarySearchTree {
-        root:any;
+        root : Node|null;
+
         constructor() {
             this.root = null;
         }
@@ -22,30 +29,31 @@ let TreeMap = (function() {
              * 插入：向二叉树插入一个新的键
              * @param key
              */
-        put(key:any,value:any) {
+        put(key:number,value:string) {
 
-            var newNode = new Node(key,value);
+            const newNode = new Node(key,value);
+
             if(this.root === null) {
-                this.root = newNode;
+                this.root = newNode
 
             } else {
                 this.insertNode(this.root, newNode);
             }
         }
-        insertNode(node:any, newNode:any) {
-            if(parseInt(Object.keys(newNode.key)[0]) < parseInt(Object.keys(node.key)[0])) {
-                if(node.left === null) {
-                    node.left = newNode;
+        insertNode(node:Node, newNode:Node) {
+            if(parseInt(Object.keys(newNode.node_dict)[0]) < parseInt(Object.keys(node.node_dict)[0])) {
+                if(node.left_node === null) {
+                    node.left_node = newNode;
                 } else {
-                    this.insertNode(node.left, newNode);
+                    this.insertNode(node.left_node, newNode);
                 }
             } else {
-                if(node.right === null) {
-                    node.right = newNode;
+                if(node.right_node === null) {
+                    node.right_node = newNode;
 
 
                 } else {
-                    this.insertNode(node.right, newNode);
+                    this.insertNode(node.right_node, newNode);
                 }
             }
         }
@@ -62,20 +70,20 @@ let TreeMap = (function() {
             }
 
         }
-        searchNode(node:any, key:any):any {
+        searchNode(node:Node|null, key:number):any {
             if(node === null) {
                 return false;
             }
 
-            if(key < parseInt(Object.keys(node.key)[0])) {
-                return this.searchNode(node.left, key);
+            if(key < parseInt(Object.keys(node.node_dict)[0])) {
+                return this.searchNode(node.left_node, key);
 
-            } else if(key > parseInt(Object.keys(node.key)[0])) {
-                return this.searchNode(node.right, key);
+            } else if(key > parseInt(Object.keys(node.node_dict)[0])) {
+                return this.searchNode(node.right_node, key);
 
             } else {
 
-                return node.key;
+                return node.node_dict;
 
             }
 
@@ -85,13 +93,13 @@ let TreeMap = (function() {
             return this.minNode(this.root);
         }
 
-        minNode(node:any) {
+        minNode(node:Node|null) {
             if(node) {
-                while(node && node.left !== null) {
-                    node = node.left;
+                while(node && node.left_node !== null) {
+                    node = node.left_node;
                 }
 
-                return node.key;
+                return node.node_dict;
             }
             return null;
         }
@@ -108,43 +116,44 @@ let TreeMap = (function() {
             }
 
         }
-        findMinNode(node:any) {
-            while(node && node.left !== null) {
-                node = node.left;
+        findMinNode(node:Node|null) {
+            while(node && node.left_node !== null) {
+                node = node.left_node;
             }
 
             return node;
         }
 
-        removeNode(node:any, element:number) {
+        removeNode(node:Node|null, element:number) {
             if(node === null) {
                 return null;
             }
-            if(element < parseInt(Object.keys(node.key)[0])) {
-                node.left = this.removeNode(node.left, element);
+            if(element < parseInt(Object.keys(node.node_dict)[0])) {
+                node.left_node = this.removeNode(node.left_node, element);
                 return node;
 
-            } else if(element > parseInt(Object.keys(node.key)[0])) {
-                node.right = this.removeNode(node.right, element);
+            } else if(element > parseInt(Object.keys(node.node_dict)[0])) {
+                node.right_node = this.removeNode(node.right_node, element);
                 return node;
 
             } else {
 
-                if(node.left === null && node.right === null) {
+                if(node.left_node === null && node.right_node === null) {
                     node = null;
                     return node;
                 }
-                if(node.left === null) {
-                    node = node.right;
+                if(node.left_node === null) {
+                    node = node.right_node;
                     return node;
 
-                } else if(node.right === null) {
-                    node = node.left;
+                } else if(node.right_node === null) {
+                    node = node.left_node;
                     return node;
+
                 }
-                var aux = this.findMinNode(node.right);
-                node.key = aux.key;
-                node.right = this.removeNode(node.right, aux.key);
+                const aux = this.findMinNode(node.right_node);
+                node.node_dict = aux.node_dict;
+                node.right_node = this.removeNode(node.right_node, parseInt(Object.keys(aux.node_dict)[0]));
                 return node;
             }
         };
@@ -153,20 +162,20 @@ let TreeMap = (function() {
             this.printNode(this.root);
             console.log(outputArr)
         }
-        printNode(node:any, callback:any = arrPush) {
+        printNode(node:Node|null, callback:any = arrPush) {
             if(node !== null) {
-                this.printNode(node.left, callback);
-                callback(node.key);
-                this.printNode(node.right, callback);
+                this.printNode(node.left_node, callback);
+                callback(node.node_dict);
+                this.printNode(node.right_node, callback);
             }
         }
 
     }
     return BinarySearchTree;
 })();
-var t = new TreeMap();
-let outputArr:any=[];
-function arrPush(value:any){
+const t = new TreeMap();
+let outputArr:Array<{[key:number]:string;}>=[];
+function arrPush(value:{[key:number]:string;}){
     outputArr.push(value);
 
 }
@@ -183,5 +192,3 @@ t.get(13);
 t.get(9);
 t.get(2);
 t.print();
-
-

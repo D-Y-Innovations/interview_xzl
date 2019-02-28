@@ -1,38 +1,36 @@
 //1. 从多个网页爬取内容，然后进行解析
 
-function loadPage(url) {
-    const  http = require('http');
-    const  pm = new Promise(function (resolve, reject) {
-        http.get(url, function (res) {
-            let html = '';
-            res.on('data', function (d) {
-                html += d.toString()
+
+// import superagent = require('superagent');
+import * as superagent from "superagent";
+
+const loadPage = function<T>(url: T) {
+    const promise = new Promise<superagent.Response>(function (resolve, reject) {
+        superagent.get(url)
+            .end(function (err:string, res:string) {
+                if (!err) {
+                    resolve(res);
+                } else {
+                    console.log(err);
+                    reject(err);
+                }
             });
-            res.on('end', function () {
-                resolve(html);
-            });
-        }).on('error', function (e) {
-             reject(e)
-        });
     });
-    return pm;
-}
+    return promise;
+};
 
 let data_count = 0;
 async function crawl(){
-        for (let i=1;i<11;i++) {
-            await loadPage('http://dy-public.oss-cn-shenzhen.aliyuncs.com/interviewTestData/'+i+'.txt').then(function (d) {
-            let str = d;
-            let reg = /data : ([\s\S]+); /gi;
-            let result ;
-            if ((result = reg.exec(str)) != null) {
-                let data_num:number = parseInt(result[1]);
-                data_count = data_count+data_num;
-                console.log(i+".txt的data值为"+data_num);
-                }
-            });
+ for(let num:number=1;num<11;num++){
+        const res = await loadPage<string>('http://dy-public.oss-cn-shenzhen.aliyuncs.com/interviewTestData/'+num+'.txt');
+        let text:string=res.text;
+        text = text.replace(/\s/g,"");
+        const bluefile = text.match(/\d+(\\.\\d+){0}/);
+        if(bluefile!=null){
+            data_count+=parseInt(bluefile[0]);
         }
-        console.log("所有data值的和为"+data_count);
+    }
+    console.log("所有data值的和为"+data_count);
 }
 crawl();
 
