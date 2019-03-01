@@ -1,4 +1,5 @@
-// 5. 以排序二叉树为基础，实现 TreeMap，使增删改查节点的时间复杂度为O(logn)
+// 5. 在treeMap的基础上，对类型不可比较的参数提供Compare函数进行比较
+
 
 interface OTHER {
     a: number,
