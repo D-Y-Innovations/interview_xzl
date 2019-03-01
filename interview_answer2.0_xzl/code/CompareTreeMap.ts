@@ -200,11 +200,8 @@ let TreeMap = (function() {
 const t = new TreeMap();
 let out_arr:any=[];
 function arrPush(key:OTHER,value:string){
-    // const tt:any = {};
-    // tt[key]:value;
-
-    const out_node:[OTHER,string]=[key,value];
-    out_arr.push(out_node);
+    const out_dict:any = {key,value};
+    out_arr.push(out_dict);
 }
 t.put({a:21,b:"a"},"v1");
 t.put({a:23,b:"b"},"v2");
@@ -214,7 +211,7 @@ t.put({a:21,b:"a"},"v4");
 t.put({a:24,b:"a"},"v4");
 
 t.print();
-t.delete({a:22,b:"b"});
+t.delete({a:22,b:"a"});
 t.get({a:23,b:"a"});
 t.get({a:21,b:"a"});
 t.get({a:24,b:"b"});
