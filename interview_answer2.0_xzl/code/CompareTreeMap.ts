@@ -45,7 +45,7 @@ class BinarySearchTree {
     root: Node_C<OTHER, string> | null;
     compare: any;
 
-    constructor(fn: any) {
+    constructor(fn: object) {
         this.root = null;
         this.compare = fn;
     }
