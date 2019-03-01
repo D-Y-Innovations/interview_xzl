@@ -3,24 +3,23 @@
 
 let TreeMap = (function() {
 
-    class Node {
+    class Node<K,V> {
 
-        node_dict:{[key:number]:string;}={};
-        left_node : Node|null;
-        right_node : Node|null;
+        key:number;
+        value:string;
+        left_node : Node<K,V>|null;
+        right_node : Node<K,V>|null;
         constructor(thekey:number,thekval:string) {
 
-            this.node_dict[thekey] = thekval;
+            this.key = thekey;
+            this.value = thekval;
             this.left_node = null;
             this.right_node = null;
         }
     }
 
-
-
-
     class BinarySearchTree {
-        root : Node|null;
+        root : Node<number,string>|null;
 
         constructor() {
             this.root = null;
@@ -31,7 +30,7 @@ let TreeMap = (function() {
              */
         put(key:number,value:string) {
 
-            const newNode = new Node(key,value);
+            const newNode:Node<number,string> = new Node(key,value);
 
             if(this.root === null) {
                 this.root = newNode
@@ -40,8 +39,8 @@ let TreeMap = (function() {
                 this.insertNode(this.root, newNode);
             }
         }
-        insertNode(node:Node, newNode:Node) {
-            if(parseInt(Object.keys(newNode.node_dict)[0]) < parseInt(Object.keys(node.node_dict)[0])) {
+        insertNode(node:Node<number,string>, newNode:Node<number,string>) {
+            if(newNode.key< node.key) {
                 if(node.left_node === null) {
                     node.left_node = newNode;
                 } else {
@@ -70,20 +69,21 @@ let TreeMap = (function() {
             }
 
         }
-        searchNode(node:Node|null, key:number):any {
+        searchNode(node:Node<number,string>|null, key:number):any {
             if(node === null) {
                 return false;
             }
 
-            if(key < parseInt(Object.keys(node.node_dict)[0])) {
+            if(key < node.key) {
                 return this.searchNode(node.left_node, key);
 
-            } else if(key > parseInt(Object.keys(node.node_dict)[0])) {
+            } else if(key > node.key) {
                 return this.searchNode(node.right_node, key);
 
             } else {
-
-                return node.node_dict;
+                const result:any = {};
+                result[node.key]=node.value;
+                return result
 
             }
 
@@ -93,13 +93,13 @@ let TreeMap = (function() {
             return this.minNode(this.root);
         }
 
-        minNode(node:Node|null) {
+        minNode(node:Node<number,string>|null) {
             if(node) {
                 while(node && node.left_node !== null) {
                     node = node.left_node;
                 }
 
-                return node.node_dict;
+                return node.key;
             }
             return null;
         }
@@ -116,7 +116,7 @@ let TreeMap = (function() {
             }
 
         }
-        findMinNode(node:Node|null) {
+        findMinNode(node:Node<number,string>|null) {
             while(node && node.left_node !== null) {
                 node = node.left_node;
             }
@@ -124,15 +124,15 @@ let TreeMap = (function() {
             return node;
         }
 
-        removeNode(node:Node|null, element:number) {
+        removeNode(node:Node<number,string>|null, element:number) {
             if(node === null) {
                 return null;
             }
-            if(element < parseInt(Object.keys(node.node_dict)[0])) {
+            if(element < node.key) {
                 node.left_node = this.removeNode(node.left_node, element);
                 return node;
 
-            } else if(element > parseInt(Object.keys(node.node_dict)[0])) {
+            } else if(element > node.key) {
                 node.right_node = this.removeNode(node.right_node, element);
                 return node;
 
@@ -152,20 +152,20 @@ let TreeMap = (function() {
 
                 }
                 const aux = this.findMinNode(node.right_node);
-                node.node_dict = aux.node_dict;
-                node.right_node = this.removeNode(node.right_node, parseInt(Object.keys(aux.node_dict)[0]));
+                node.key = aux.key;
+                node.right_node = this.removeNode(node.right_node, aux.key);
                 return node;
             }
         };
         print(){
-            outputArr = [];
+            out_arr = [];
             this.printNode(this.root);
-            console.log(outputArr)
+            console.log(out_arr)
         }
-        printNode(node:Node|null, callback:any = arrPush) {
+        printNode(node:Node<number,string>|null, callback:any = arrPush) {
             if(node !== null) {
                 this.printNode(node.left_node, callback);
-                callback(node.node_dict);
+                callback(node.key,node.value);
                 this.printNode(node.right_node, callback);
             }
         }
@@ -174,10 +174,11 @@ let TreeMap = (function() {
     return BinarySearchTree;
 })();
 const t = new TreeMap();
-let outputArr:Array<{[key:number]:string;}>=[];
-function arrPush(value:{[key:number]:string;}){
-    outputArr.push(value);
-
+let out_arr:Array<{[key:number]:string;}>=[];
+function arrPush(key:number,value:string){
+    const out_node:any = {};
+    out_node[key]=value;
+    out_arr.push(out_node);
 }
 t.put(11,"v11");
 t.put(6,"v6");
