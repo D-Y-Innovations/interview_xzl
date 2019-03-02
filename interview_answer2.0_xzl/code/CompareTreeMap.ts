@@ -1,12 +1,12 @@
-// 5. 在treeMap的基础上，对类型不可比较的参数提供Compare函数进行比较
-
+// 5. 以排序二叉树为基础，实现 TreeMap，使增删改查节点的时间复杂度为O(logn)
 
 interface OTHER {
     a: number,
     b: string
 }
 
-function compare_key(newkey: OTHER, key: OTHER) {
+
+function comparetor(newkey: OTHER, key: OTHER) {
     if (newkey.a == key.a) {
         if (newkey.b < key.b) {
             return 0
@@ -25,21 +25,20 @@ function compare_key(newkey: OTHER, key: OTHER) {
     }
 }
 
-/*
-class Node_C<K, V> {
-    key: K;
-    value: V;
-    left_node?: Node_C<K, V>;
-    right_node?: Node_C<K, V>;
 
-    constructor(thekey: K, thekval: V) {
-        this.key = thekey;
-        this.value = thekval;
-        this.left_node = null;
-        this.right_node = null;
-    }
+// class Node_C<K, V> {
+//     key: K;
+//     value: V;
+//     left_node: Node_C<K, V> | null;
+//     right_node: Node_C<K, V> | null;
+//
+//     constructor(thekey: K, thekval: V) {
+//         this.key = thekey;
+//         this.value = thekval;
+//         this.left_node = null;
+//         this.right_node = null;
+//     }
 }
-*/
 
 type Node_C<K, V> = {
     key: K,
@@ -49,16 +48,21 @@ type Node_C<K, V> = {
 }
 
 
-class BinarySearchTree<K, V> {
+class BinarySearchTree<K,V> {
     root: Node_C<K, V> | null;
+    // compare: any;
 
-    constructor(public readonly compare: (k1: K1, k2: K2): number) {
+    constructor(public readonly compare: (k1: K, k2: K)=>number) {
         this.root = null;
+        // this.compare = fn;
     }
 
     //插入：向二叉树插入一个新的键
     put(key: K, value: V) {
-        const newNode: Node_C<K, V> = { key, value }
+
+        // const newNode: Node_C<K, V> = new Node_C(key, value);
+        const newNode:  Node_C<K, V> = { key, value};
+
         if (this.root === null) {
             this.root = newNode
         } else {
@@ -95,7 +99,7 @@ class BinarySearchTree<K, V> {
     }
 
     //查询节点
-    searchNode(node: Node_C<OTHER, string> | null, key: OTHER): any {
+    searchNode(node: Node_C<K, V> | null, key: K): any {
         if (node === null) {
 
             return false;
@@ -116,7 +120,7 @@ class BinarySearchTree<K, V> {
 
 
     //最小节点
-    minNode(node: Node_C<OTHER, string> | null) {
+    minNode(node: Node_C<K, V> | null) {
         if (node) {
             while (node && node.left_node !== null) {
                 node = node.left_node;
@@ -128,7 +132,7 @@ class BinarySearchTree<K, V> {
     }
 
     // 删除节点
-    delete(element: OTHER) {
+    delete(element: K) {
         if (this.searchNode(this.root, element)) {
             this.root = this.removeNode(this.root, element);
             console.log("已经删除节点:", element);
@@ -138,7 +142,7 @@ class BinarySearchTree<K, V> {
 
     }
 
-    findMinNode(node: Node_C<OTHER, string> | null) {
+    findMinNode(node: Node_C<K, V> | null) {
 
         while (node && node.left_node !== null) {
             node = node.left_node;
@@ -147,7 +151,7 @@ class BinarySearchTree<K, V> {
         return node;
     }
 
-    removeNode(node: Node_C<OTHER, string> | null, element: OTHER) {
+    removeNode(node: Node_C<K, V> | null, element: K) {
 
         if (node === null) {
             return null;
@@ -191,7 +195,7 @@ class BinarySearchTree<K, V> {
     }
 
     // 递归遍历二叉树，升序添加入数组
-    printNode(node: Node_C<OTHER, string> | null, callback: any = arrPush) {
+    printNode(node: Node_C<K, V> | null, callback: any = arrPush) {
         if (node !== null) {
             this.printNode(node.left_node, callback);
             callback(node.key, node.value);
@@ -201,7 +205,7 @@ class BinarySearchTree<K, V> {
 
 }
 
-const tree = new BinarySearchTree(compare_key);
+const tree = new BinarySearchTree(comparetor);
 let out_arr: any = [];
 
 function arrPush(key: OTHER, value: string) {
