@@ -25,12 +25,12 @@ function compare_key(newkey: OTHER, key: OTHER) {
     }
 }
 
-
+/*
 class Node_C<K, V> {
     key: K;
     value: V;
-    left_node: Node_C<K, V> | null;
-    right_node: Node_C<K, V> | null;
+    left_node?: Node_C<K, V>;
+    right_node?: Node_C<K, V>;
 
     constructor(thekey: K, thekval: V) {
         this.key = thekey;
@@ -39,20 +39,26 @@ class Node_C<K, V> {
         this.right_node = null;
     }
 }
+*/
+
+type Node_C<K, V> = {
+    key: K,
+    value: V,
+    left?: Node_C<K, V>,
+    right?: Node_C<K, V>
+}
 
 
-class BinarySearchTree {
-    root: Node_C<OTHER, string> | null;
-    compare: any;
+class BinarySearchTree<K, V> {
+    root: Node_C<K, V> | null;
 
-    constructor(fn: object) {
+    constructor(public readonly compare: (k1: K1, k2: K2): number) {
         this.root = null;
-        this.compare = fn;
     }
 
     //插入：向二叉树插入一个新的键
-    put(key: OTHER, value: string) {
-        const newNode: Node_C<OTHER, string> = new Node_C(key, value);
+    put(key: K, value: V) {
+        const newNode: Node_C<K, V> = { key, value }
         if (this.root === null) {
             this.root = newNode
         } else {
@@ -60,7 +66,7 @@ class BinarySearchTree {
         }
     }
 
-    insertNode(node: Node_C<OTHER, string>, newNode: Node_C<OTHER, string>) {
+    insertNode(node: Node_C<K, V>, newNode: Node_C<K, V>) {
         if (this.compare(newNode.key, node.key) == 0) {
             if (node.left_node === null) {
                 node.left_node = newNode;
@@ -78,7 +84,7 @@ class BinarySearchTree {
     }
 
     // 查询并获取Value
-    get(key: OTHER) {
+    get(key: K) {
         if (this.searchNode(this.root, key)) {
             console.log(this.searchNode(this.root, key))
         }
