@@ -37,7 +37,6 @@ type Node_C<K, V> = {
 class BinarySearchTree<K,V> {
     root?: Node_C<K, V>;
 
-
     constructor(public readonly compare: (k1: K, k2: K)=>number) {
         this.root = null;
 
