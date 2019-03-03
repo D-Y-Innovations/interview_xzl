@@ -1,4 +1,4 @@
-// 5. 以排序二叉树为基础，实现 TreeMap，使增删改查节点的时间复杂度为O(logn)
+// 5. 在TreeMap的基础上，对类型不可直接比较的参数提供Compare函数进行比较
 
 interface OTHER {
     a: number,
@@ -26,41 +26,26 @@ function comparetor(newkey: OTHER, key: OTHER) {
 }
 
 
-// class Node_C<K, V> {
-//     key: K;
-//     value: V;
-//     left_node: Node_C<K, V> | null;
-//     right_node: Node_C<K, V> | null;
-//
-//     constructor(thekey: K, thekval: V) {
-//         this.key = thekey;
-//         this.value = thekval;
-//         this.left_node = null;
-//         this.right_node = null;
-//     }
-}
-
 type Node_C<K, V> = {
     key: K,
     value: V,
-    left?: Node_C<K, V>,
-    right?: Node_C<K, V>
+    left_node?: Node_C<K, V>,
+    right_node?: Node_C<K, V>
 }
 
 
 class BinarySearchTree<K,V> {
-    root: Node_C<K, V> | null;
-    // compare: any;
+    root?: Node_C<K, V>;
+
 
     constructor(public readonly compare: (k1: K, k2: K)=>number) {
         this.root = null;
-        // this.compare = fn;
+
     }
 
     //插入：向二叉树插入一个新的键
     put(key: K, value: V) {
 
-        // const newNode: Node_C<K, V> = new Node_C(key, value);
         const newNode:  Node_C<K, V> = { key, value};
 
         if (this.root === null) {
@@ -72,13 +57,13 @@ class BinarySearchTree<K,V> {
 
     insertNode(node: Node_C<K, V>, newNode: Node_C<K, V>) {
         if (this.compare(newNode.key, node.key) == 0) {
-            if (node.left_node === null) {
+            if (!node.left_node) {
                 node.left_node = newNode;
             } else {
                 this.insertNode(node.left_node, newNode);
             }
         } else {
-            if (node.right_node === null) {
+            if (!node.right_node) {
                 node.right_node = newNode;
 
             } else {
@@ -100,7 +85,7 @@ class BinarySearchTree<K,V> {
 
     //查询节点
     searchNode(node: Node_C<K, V> | null, key: K): any {
-        if (node === null) {
+        if (!node ) {
 
             return false;
         }
@@ -142,18 +127,18 @@ class BinarySearchTree<K,V> {
 
     }
 
-    findMinNode(node: Node_C<K, V> | null) {
+    findMinNode(node: Node_C<K, V> ) {
 
-        while (node && node.left_node !== null) {
+        while (node && node.left_node) {
             node = node.left_node;
         }
 
         return node;
     }
 
-    removeNode(node: Node_C<K, V> | null, element: K) {
+    removeNode(node: Node_C<K, V> , element: K) {
 
-        if (node === null) {
+        if (!node) {
             return null;
         }
 
@@ -167,15 +152,15 @@ class BinarySearchTree<K,V> {
 
         } else {
 
-            if (node.left_node === null && node.right_node === null) {
+            if (!node.left_node  && !node.right_node) {
                 node = null;
                 return node;
             }
-            if (node.left_node === null) {
+            if (!node.left_node ) {
                 node = node.right_node;
                 return node;
 
-            } else if (node.right_node === null) {
+            } else if (!node.right_node) {
                 node = node.left_node;
                 return node;
 
@@ -195,8 +180,8 @@ class BinarySearchTree<K,V> {
     }
 
     // 递归遍历二叉树，升序添加入数组
-    printNode(node: Node_C<K, V> | null, callback: any = arrPush) {
-        if (node !== null) {
+    printNode(node?: Node_C<K, V> ,callback: any = arrPush, ) {
+        if (node) {
             this.printNode(node.left_node, callback);
             callback(node.key, node.value);
             this.printNode(node.right_node, callback);
@@ -226,4 +211,3 @@ tree.get({a: 23, b: "a"});
 tree.get({a: 21, b: "a"});
 tree.get({a: 24, b: "b"});
 tree.print();
-
