@@ -205,7 +205,7 @@ tree.put({a: 22, b: "a"}, "v4");
 tree.put({a: 21, b: "a"}, "v4");
 tree.put({a: 24, b: "a"}, "v4");
 
-tree.print();
+tree.print(); 
 tree.delete({a: 23, b: "b"});
 tree.get({a: 23, b: "a"});
 tree.get({a: 21, b: "a"});
